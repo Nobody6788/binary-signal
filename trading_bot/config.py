@@ -7,7 +7,11 @@ IQ_OPTION_USERNAME = "YOUR_USERNAME"
 IQ_OPTION_PASSWORD = "YOUR_PASSWORD"
 
 # -- LLM Provider Configuration --
-# You can use any LLM provider that has a Python library.
-# For example, to use OpenAI, set LLM_PROVIDER to "openai" and provide your API key.
-LLM_PROVIDER = "openai"  # or "gemini", "openrouter", etc.
-LLM_API_KEY = "YOUR_API_KEY"
+# Choose your LLM provider. Supported options: "openai", "gemini"
+# Make sure to fill in the corresponding API key below.
+LLM_PROVIDER = "openai"  # or "gemini"
+
+# -- API Keys --
+# Fill in the API key for the provider you selected above.
+OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"
+GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"

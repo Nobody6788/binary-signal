@@ -15,9 +15,20 @@ def main():
         logging.error("Please fill in your IQ Option credentials in config.py before running the bot.")
         return
 
-    if config.LLM_API_KEY == "YOUR_API_KEY":
-        logging.error("Please fill in your LLM API key in config.py before running the bot.")
+    # --- Initial Checks ---
+    if config.IQ_OPTION_USERNAME == "YOUR_USERNAME" or config.IQ_OPTION_PASSWORD == "YOUR_PASSWORD":
+        logging.error("Please fill in your IQ Option credentials in config.py before running the bot.")
         return
+
+    provider = config.LLM_PROVIDER.lower()
+    if provider == "openai":
+        if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY":
+            logging.error("Please fill in your OpenAI API key in config.py before running the bot.")
+            return
+    elif provider == "gemini":
+        if not config.GEMINI_API_KEY or config.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
+            logging.error("Please fill in your Gemini API key in config.py before running the bot.")
+            return
 
     # --- Initialization ---
     iq_connector = IQConnector()
