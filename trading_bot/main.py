@@ -15,11 +15,6 @@ def main():
         logging.error("Please fill in your IQ Option credentials in config.py before running the bot.")
         return
 
-    # --- Initial Checks ---
-    if config.IQ_OPTION_USERNAME == "YOUR_USERNAME" or config.IQ_OPTION_PASSWORD == "YOUR_PASSWORD":
-        logging.error("Please fill in your IQ Option credentials in config.py before running the bot.")
-        return
-
     provider = config.LLM_PROVIDER.lower()
     if provider == "openai":
         if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY":
