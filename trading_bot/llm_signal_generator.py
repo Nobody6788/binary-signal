@@ -21,21 +21,21 @@ class LLMSignalGenerator:
         else:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
 
-    def generate_signal(self, market_data):
+    def generate_signal(self, analysis_data):
         """
-        Generates a trading signal based on the provided market data.
+        Generates a trading signal based on the provided technical analysis data.
 
         Args:
-            market_data (list): A list of candlestick data from the IQ Option API.
+            analysis_data (dict): A dictionary containing technical indicators and patterns.
 
         Returns:
             str: A trading signal ("CALL", "PUT", or "HOLD"), or None if an error occurs.
         """
-        if not market_data:
-            logging.warning("Market data is empty. Cannot generate a signal.")
+        if not analysis_data:
+            logging.warning("Analysis data is empty. Cannot generate a signal.")
             return None
 
-        prompt = self._build_prompt(market_data)
+        prompt = self._build_prompt(analysis_data)
 
         try:
             logging.info(f"Sending request to {self.provider} for a trading signal...")
@@ -47,17 +47,29 @@ class LLMSignalGenerator:
             logging.error(f"An error occurred while communicating with the LLM: {e}")
             return None
 
-    def _build_prompt(self, market_data):
+    def _build_prompt(self, analysis_data):
         """Builds the prompt for the LLM."""
-        prompt_data = "Candlestick data (open, close, high, low):\n"
-        for candle in market_data:
-            prompt_data += f"- Open: {candle['open']}, Close: {candle['close']}, High: {candle['max']}, Low: {candle['min']}\n"
+        indicators = analysis_data.get('indicators', {})
+        patterns = analysis_data.get('patterns', [])
+
+        prompt_data = "--- Market Analysis ---\n"
+        prompt_data += "Technical Indicators:\n"
+        for key, value in indicators.items():
+            prompt_data += f"- {key}: {value:.2f}\n" if isinstance(value, float) else f"- {key}: {value}\n"
+
+        prompt_data += "\nDetected Candlestick Patterns:\n"
+        if patterns:
+            for pattern in patterns:
+                prompt_data += f"- {pattern}\n"
+        else:
+            prompt_data += "- None\n"
 
         system_prompt = (
             "You are a financial analyst specializing in binary options trading. "
-            "Your task is to analyze the provided candlestick data and predict the "
-            "next market movement for the next 60 seconds. Respond with only one "
-            "of the following commands: 'CALL' (if you predict the price will go up), "
+            "Your task is to analyze the provided market data, including technical "
+            "indicators and candlestick patterns, to predict the next market "
+            "movement for the next 60 seconds. Respond with only one of the "
+            "following commands: 'CALL' (if you predict the price will go up), "
             "'PUT' (if you predict the price will go down), or 'HOLD' (if you are "
             "uncertain or predict no significant movement)."
         )
@@ -108,15 +120,21 @@ if __name__ == '__main__':
     if not api_key_set:
         print(f"Please fill in your {provider.upper()} API key in config.py before running this test.")
     else:
-        # Example with dummy market data
-        dummy_data = [
-            {'open': 1.1, 'close': 1.2, 'max': 1.25, 'min': 1.05},
-            {'open': 1.2, 'close': 1.3, 'max': 1.35, 'min': 1.15},
-            {'open': 1.3, 'close': 1.25, 'max': 1.32, 'min': 1.22},
-        ]
+        # Example with dummy analysis data
+        dummy_analysis = {
+            'indicators': {
+                'sma_14': 1.55,
+                'rsi_14': 60.0,
+                'bollinger_upper': 1.65,
+                'bollinger_lower': 1.45,
+                'macd': 0.05,
+                'stochastic_oscillator': 80.0,
+            },
+            'patterns': ['CDL_DOJI'],
+        }
 
         signal_generator = LLMSignalGenerator()
-        signal = signal_generator.generate_signal(dummy_data)
+        signal = signal_generator.generate_signal(dummy_analysis)
 
         if signal:
             print(f"Generated Signal: {signal}")

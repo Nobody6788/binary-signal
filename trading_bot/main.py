@@ -3,6 +3,7 @@ import logging
 import config
 from iq_connector import IQConnector
 from llm_signal_generator import LLMSignalGenerator
+from technical_analyzer import TechnicalAnalyzer
 
 def main():
     """
@@ -40,14 +41,18 @@ def main():
     try:
         while True:
             # 1. Fetch market data
-            market_data = iq_connector.get_market_data(asset='EURUSD', time_period=60, num_candles=10)
+            market_data = iq_connector.get_market_data(asset='EURUSD', time_period=60, num_candles=50) # Increased candle count for better analysis
 
             if market_data:
-                # 2. Generate a signal
-                signal = llm_signal_generator.generate_signal(market_data)
+                # 2. Analyze the market data
+                analyzer = TechnicalAnalyzer(market_data)
+                analysis_results = analyzer.analyze()
+
+                # 3. Generate a signal
+                signal = llm_signal_generator.generate_signal(analysis_results)
 
                 if signal:
-                    # 3. Display the signal to the user
+                    # 4. Display the signal to the user
                     logging.info(f"--- TRADING SIGNAL ---")
                     logging.info(f"Asset: EURUSD")
                     logging.info(f"Signal: {signal}")
