@@ -17,6 +17,24 @@ This project is a Python-based trading bot that generates trading signals for th
 
 Follow these steps to get the bot up and running:
 
+### Prerequisites
+
+- **Python 3.7.2 or higher:** This project requires a specific Python version due to the `iqoptionapi` library.
+- **TA-Lib:** This project uses the `TA-Lib` library for technical analysis, which requires the underlying C library to be installed first.
+
+  **On Linux (Debian/Ubuntu):**
+  ```bash
+  sudo apt-get update && sudo apt-get install -y libta-lib0-dev
+  ```
+
+  **On macOS:**
+  ```bash
+  brew install ta-lib
+  ```
+
+  **On Windows:**
+  Download and install `ta-lib-0.4.0-msvc.zip` from [SourceForge](https://sourceforge.net/projects/ta-lib/files/ta-lib/0.4.0/).
+
 ### 1. Clone the Repository
 
 First, clone this repository to your local machine:
