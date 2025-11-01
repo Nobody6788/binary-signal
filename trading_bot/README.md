@@ -1,6 +1,6 @@
 # LLM Trading Signal Bot for IQ Option
 
-This project is a Python-based trading bot that generates trading signals for the IQ Option platform using a Large Language Model (LLM). The bot is designed to be a **signal provider**, not an automated trading system. It fetches market data, sends it to an LLM for analysis, and then displays the resulting signal (CALL, PUT, or HOLD) in the console.
+This project is a Python-based trading bot that generates trading signals for the IQ Option platform using a Large Language Model (LLM). The bot is designed to be a **signal provider**, not an automated trading system. It can be run in two modes: as a console application or as a web-based user interface.
 
 **Disclaimer:** Trading carries significant risk. This bot is intended for educational purposes and should be used with a **practice account**. The creators of the `iqoptionapi` library strongly advise against using it with a real money account. If you choose to use a real account, you assume all risks involved.
 
@@ -8,7 +8,9 @@ This project is a Python-based trading bot that generates trading signals for th
 
 -   Connects to your IQ Option account (practice or real).
 -   Fetches real-time candlestick data.
+-   Performs technical analysis with 5 indicators and candlestick pattern recognition.
 -   Integrates with LLM providers (OpenAI and Gemini) to generate trading signals.
+-   Provides both a console-based and a web-based user interface.
 -   Configurable and extensible.
 
 ## Setup Instructions
@@ -64,12 +66,30 @@ Before running the bot, you need to configure your credentials and API keys in t
 
 ## How to Run the Bot
 
-Once you have completed the setup and configuration, you can run the bot with the following command from the root of the repository:
+You can run the bot in two modes:
+
+### Mode 1: Console-Based (for logging and debugging)
+
+This mode prints the signals directly to your console.
 
 ```bash
 python3 trading_bot/main.py
 ```
 
-The bot will connect to your IQ Option account, fetch market data, and start generating signals every 60 seconds. The signals will be displayed in your console.
+### Mode 2: Web-Based User Interface
 
-To stop the bot, press `Ctrl+C`.
+This mode launches a local web server so you can view the signals in your browser.
+
+1.  **Run the Flask application:**
+    ```bash
+    python3 trading_bot/app.py
+    ```
+
+2.  **Open your web browser** and go to the following address:
+    ```
+    http://127.0.0.1:5000
+    ```
+
+The web page will display the latest signal and will automatically refresh every 60 seconds.
+
+To stop the bot in either mode, press `Ctrl+C` in your terminal.

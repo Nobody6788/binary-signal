@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="60">
+    <title>Trading Bot Signal</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #1c1c1e;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 1.5em;
+            color: #6c757d;
+        }
+        .signal {
+            font-size: 4em;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            border-radius: 8px;
+            color: #fff;
+        }
+        .signal.call { background-color: #28a745; }
+        .signal.put { background-color: #dc3545; }
+        .signal.hold { background-color: #6c757d; }
+        .error {
+            color: #dc3545;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trading Signal</h1>
+        {% if error %}
+            <h2 class="error">Error: {{ error }}</h2>
+        {% elif asset and signal %}
+            <h2>Asset: {{ asset }}</h2>
+            <div class="signal {{ signal|lower }}">
+                {{ signal }}
+            </div>
+        {% else %}
+            <h2>Waiting for next signal...</h2>
+        {% endif %}
+    </div>
+</body>
+</html>
