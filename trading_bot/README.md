@@ -7,9 +7,9 @@ This project is a Python-based trading bot that generates trading signals for th
 ## Features
 
 -   Connects to your IQ Option account (practice or real).
--   Fetches real-time candlestick data.
+-   Fetches real-time candlestick data for a user-configurable asset.
 -   Performs technical analysis with 5 indicators and candlestick pattern recognition.
--   Integrates with LLM providers (OpenAI and Gemini) to generate trading signals.
+-   Integrates with LLM providers (OpenAI, Gemini, and OpenRouter) to generate trading signals.
 -   Provides both a console-based and a web-based user interface.
 -   Configurable and extensible.
 
@@ -75,12 +75,19 @@ Before running the bot, you need to configure your credentials and API keys in t
     -   `IQ_OPTION_PASSWORD`: Your IQ Option password.
     -   `ACCOUNT_TYPE`: Set to `"practice"` (recommended) or `"real"`.
 
-3.  **Choose your LLM Provider**:
-    -   `LLM_PROVIDER`: Set to `"openai"` or `"gemini"`.
+3.  **Set the Trading Asset**:
+    -   `ASSET`: The asset you want to monitor (e.g., `"EURUSD"`, `"GBPUSD"`).
 
-4.  **Set your API Key**:
+4.  **Choose your LLM Provider**:
+    -   `LLM_PROVIDER`: Set to `"openai"`, `"gemini"`, or `"openrouter"`.
+
+5.  **Set your API Key(s)**:
     -   If you chose `"openai"`, fill in `OPENAI_API_KEY`.
     -   If you chose `"gemini"`, fill in `GEMINI_API_KEY`.
+    -   If you chose `"openrouter"`, fill in `OPENROUTER_API_KEY`.
+
+6.  **(Optional) Configure OpenRouter Model**:
+    -   If you are using OpenRouter, you can specify which model to use in the `OPENROUTER_MODEL` variable. A good free option is `"google/gemma-7b-it"`.
 
 ## How to Run the Bot
 

@@ -25,6 +25,10 @@ def main():
         if not config.GEMINI_API_KEY or config.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
             logging.error("Please fill in your Gemini API key in config.py before running the bot.")
             return
+    elif provider == "openrouter":
+        if not config.OPENROUTER_API_KEY or config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY":
+            logging.error("Please fill in your OpenRouter API key in config.py before running the bot.")
+            return
 
     # --- Initialization ---
     iq_connector = IQConnector()
@@ -35,13 +39,14 @@ def main():
         return
 
     logging.info("Trading Bot is now running. Press Ctrl+C to stop.")
+    logging.info(f"Monitoring asset: {config.ASSET}")
     logging.info("The bot will provide a new trading signal every 60 seconds.")
 
     # --- Main Loop ---
     try:
         while True:
             # 1. Fetch market data
-            market_data = iq_connector.get_market_data(asset='EURUSD', time_period=60, num_candles=50) # Increased candle count for better analysis
+            market_data = iq_connector.get_market_data(asset=config.ASSET, time_period=60, num_candles=50)
 
             if market_data:
                 # 2. Analyze the market data
@@ -54,7 +59,7 @@ def main():
                 if signal:
                     # 4. Display the signal to the user
                     logging.info(f"--- TRADING SIGNAL ---")
-                    logging.info(f"Asset: EURUSD")
+                    logging.info(f"Asset: {config.ASSET}")
                     logging.info(f"Signal: {signal}")
                     logging.info(f"----------------------")
                 else:

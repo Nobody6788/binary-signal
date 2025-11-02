@@ -27,6 +27,8 @@ def initialize_bot():
         raise Exception("Please fill in your OpenAI API key in config.py")
     elif provider == "gemini" and (not config.GEMINI_API_KEY or config.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY"):
         raise Exception("Please fill in your Gemini API key in config.py")
+    elif provider == "openrouter" and (not config.OPENROUTER_API_KEY or config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY"):
+        raise Exception("Please fill in your OpenRouter API key in config.py")
 
     # --- Initialization ---
     iq_connector = IQConnector()
@@ -43,10 +45,10 @@ def home():
     """
     try:
         # 1. Fetch market data
-        market_data = iq_connector.get_market_data(asset='EURUSD', time_period=60, num_candles=50)
+        market_data = iq_connector.get_market_data(asset=config.ASSET, time_period=60, num_candles=50)
 
         if not market_data:
-            return render_template('index.html', error="Could not retrieve market data.")
+            return render_template('index.html', error=f"Could not retrieve market data for {config.ASSET}.")
 
         # 2. Analyze the market data
         analyzer = TechnicalAnalyzer(market_data)
@@ -59,7 +61,7 @@ def home():
             return render_template('index.html', error="Could not retrieve a valid signal from the LLM.")
 
         # 4. Render the page with the signal
-        return render_template('index.html', asset='EURUSD', signal=signal)
+        return render_template('index.html', asset=config.ASSET, signal=signal)
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

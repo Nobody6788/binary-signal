@@ -13,23 +13,26 @@ class LLMSignalGenerator:
             if not config.OPENAI_API_KEY or config.OPENAI_API_KEY == "YOUR_OPENAI_API_KEY":
                 raise ValueError("OpenAI API key is not set in config.py")
             self.client = openai.OpenAI(api_key=config.OPENAI_API_KEY)
+            self.model = "gpt-3.5-turbo"
         elif self.provider == "gemini":
             if not config.GEMINI_API_KEY or config.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
                 raise ValueError("Gemini API key is not set in config.py")
             genai.configure(api_key=config.GEMINI_API_KEY)
             self.client = genai.GenerativeModel('gemini-pro')
+        elif self.provider == "openrouter":
+            if not config.OPENROUTER_API_KEY or config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY":
+                raise ValueError("OpenRouter API key is not set in config.py")
+            self.client = openai.OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=config.OPENROUTER_API_KEY,
+            )
+            self.model = config.OPENROUTER_MODEL
         else:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
 
     def generate_signal(self, analysis_data):
         """
         Generates a trading signal based on the provided technical analysis data.
-
-        Args:
-            analysis_data (dict): A dictionary containing technical indicators and patterns.
-
-        Returns:
-            str: A trading signal ("CALL", "PUT", or "HOLD"), or None if an error occurs.
         """
         if not analysis_data:
             logging.warning("Analysis data is empty. Cannot generate a signal.")
@@ -39,8 +42,8 @@ class LLMSignalGenerator:
 
         try:
             logging.info(f"Sending request to {self.provider} for a trading signal...")
-            if self.provider == "openai":
-                return self._get_openai_signal(prompt)
+            if self.provider == "openai" or self.provider == "openrouter":
+                return self._get_openai_compatible_signal(prompt)
             elif self.provider == "gemini":
                 return self._get_gemini_signal(prompt)
         except Exception as e:
@@ -75,10 +78,10 @@ class LLMSignalGenerator:
         )
         return f"{system_prompt}\n\n{prompt_data}"
 
-    def _get_openai_signal(self, prompt):
-        """Gets a signal from the OpenAI API."""
+    def _get_openai_compatible_signal(self, prompt):
+        """Gets a signal from an OpenAI-compatible API (like OpenRouter)."""
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=self.model,
             messages=[
                 {"role": "system", "content": "You are a financial analyst."},
                 {"role": "user", "content": prompt}
@@ -106,8 +109,6 @@ class LLMSignalGenerator:
 
 if __name__ == '__main__':
     # This is for testing the signal generator directly.
-    # To run this, you need to fill in your LLM API key in config.py
-
     provider = config.LLM_PROVIDER.lower()
     api_key_set = False
     if provider == "openai":
@@ -116,26 +117,21 @@ if __name__ == '__main__':
     elif provider == "gemini":
         if config.GEMINI_API_KEY and config.GEMINI_API_KEY != "YOUR_GEMINI_API_KEY":
             api_key_set = True
+    elif provider == "openrouter":
+        if config.OPENROUTER_API_KEY and config.OPENROUTER_API_KEY != "YOUR_OPENROUTER_API_KEY":
+            api_key_set = True
 
     if not api_key_set:
         print(f"Please fill in your {provider.upper()} API key in config.py before running this test.")
     else:
-        # Example with dummy analysis data
         dummy_analysis = {
             'indicators': {
-                'sma_14': 1.55,
-                'rsi_14': 60.0,
-                'bollinger_upper': 1.65,
-                'bollinger_lower': 1.45,
-                'macd': 0.05,
-                'stochastic_oscillator': 80.0,
-            },
-            'patterns': ['CDL_DOJI'],
+                'sma_14': 1.55, 'rsi_14': 60.0, 'bollinger_upper': 1.65,
+                'bollinger_lower': 1.45, 'macd': 0.05, 'stochastic_oscillator': 80.0,
+            }, 'patterns': ['CDL_DOJI'],
         }
-
         signal_generator = LLMSignalGenerator()
         signal = signal_generator.generate_signal(dummy_analysis)
-
         if signal:
             print(f"Generated Signal: {signal}")
         else:
