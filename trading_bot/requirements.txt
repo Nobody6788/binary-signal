@@ -2,7 +2,6 @@ annotated-types
 anyio
 astroid
 blinker
-build
 cachetools
 certifi
 charset-normalizer
@@ -36,7 +35,6 @@ mccabe
 numba
 numpy
 openai
-packaging
 pandas
 pandas-ta
 platformdirs

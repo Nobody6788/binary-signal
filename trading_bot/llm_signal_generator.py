@@ -18,7 +18,7 @@ class LLMSignalGenerator:
             if not config.GEMINI_API_KEY or config.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
                 raise ValueError("Gemini API key is not set in config.py")
             genai.configure(api_key=config.GEMINI_API_KEY)
-            self.client = genai.GenerativeModel('gemini-pro')
+            self.client = genai.GenerativeModel('gemini-2.0-flash-001')
         elif self.provider == "openrouter":
             if not config.OPENROUTER_API_KEY or config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY":
                 raise ValueError("OpenRouter API key is not set in config.py")
