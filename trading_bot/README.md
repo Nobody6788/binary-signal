@@ -4,7 +4,7 @@ This project is a Python-based trading bot that generates trading signals for th
 
 **Disclaimer:** Trading carries significant risk. This bot is intended for educational purposes and should be used with a **practice account**. The creators of the `iqoptionapi` library strongly advise against using it with a real money account. If you choose to use a real account, you assume all risks involved.
 
-## Features
+## Features--------------
 
 -   Connects to your IQ Option account (practice or real).
 -   Fetches real-time candlestick data for a user-configurable asset.
