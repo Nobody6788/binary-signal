@@ -17,7 +17,7 @@ This project is a Python-based trading bot that generates trading signals for th
 
 Follow these steps to get the bot up and running:
 
-### Prerequisites---------------
+### Prerequisites
 
 - **Python 3.7.2 or higher:** This project requires a specific Python version due to the `iqoptionapi` library.
 - **TA-Lib:** This project uses the `TA-Lib` library for technical analysis, which requires the underlying C library to be installed first.
